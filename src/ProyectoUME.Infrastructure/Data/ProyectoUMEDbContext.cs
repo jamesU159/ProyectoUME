@@ -16,106 +16,27 @@ namespace ProyectoUME.Core
         {
         }
 
-        public virtual DbSet<Administrador> Administrador { get; set; }
-        public virtual DbSet<Documentos> Documentos { get; set; }
         public virtual DbSet<Empresa> Empresa { get; set; }
-        public virtual DbSet<Excusas> Excusas { get; set; }
+        public virtual DbSet<Excusa> Excusa { get; set; }
+        public virtual DbSet<Jornada> Jornada { get; set; }
         public virtual DbSet<ListaEmpleados> ListaEmpleados { get; set; }
-        public virtual DbSet<Obrero> Obrero { get; set; }
-        public virtual DbSet<Permisos> Permisos { get; set; }
+        public virtual DbSet<Permiso> Permiso { get; set; }
         public virtual DbSet<Proyecto> Proyecto { get; set; }
-        public virtual DbSet<Supervisor> Supervisor { get; set; }
+        public virtual DbSet<Rol> Rol { get; set; }
         public virtual DbSet<TurnoLaboral> TurnoLaboral { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           /* if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySQL("database=proyecto;server=localhost;port=3306;user id=root;password=");
-            }*/
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseMySQL("database=proyecto ume;server=localhost;port=3306;user id=root;password=");
+//            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Administrador>(entity =>
-            {
-                entity.HasKey(e => e.IdAdministrador)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("administrador");
-
-                entity.HasIndex(e => e.NumeroCedula)
-                    .HasName("fk_usuario_administrador");
-
-                entity.Property(e => e.IdAdministrador)
-                    .HasColumnName("ID_Administrador")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Apellido1A)
-                    .HasColumnName("Apellido1_A")
-                    .HasMaxLength(15)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.Nombre1A)
-                    .HasColumnName("Nombre1_A")
-                    .HasMaxLength(10)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.NumeroCedula)
-                    .HasColumnName("Numero_cedula")
-                    .HasColumnType("int(11)")
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.HasOne(d => d.NumeroCedulaNavigation)
-                    .WithMany(p => p.Administrador)
-                    .HasForeignKey(d => d.NumeroCedula)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("fk_usuario_administrador");
-            });
-
-            modelBuilder.Entity<Documentos>(entity =>
-            {
-                entity.HasKey(e => e.IdTramiteD)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("documentos");
-
-                entity.Property(e => e.IdTramiteD)
-                    .HasColumnName("ID_tramite_D")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.CertificadoArl)
-                    .HasColumnName("Certificado_ARL")
-                    .HasMaxLength(2)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.CertificadoEps)
-                    .HasColumnName("Certificado_Eps")
-                    .HasMaxLength(2)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.CertificadoPensiones)
-                    .HasColumnName("Certificado_Pensiones")
-                    .HasMaxLength(2)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.CursoAltura)
-                    .HasColumnName("Curso_Altura")
-                    .HasMaxLength(2)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.Fecha)
-                    .HasColumnType("date")
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.HojaVida)
-                    .HasColumnName("Hoja_Vida")
-                    .HasMaxLength(2)
-                    .HasDefaultValueSql("'NULL'");
-            });
-
             modelBuilder.Entity<Empresa>(entity =>
             {
                 entity.HasKey(e => e.Nit)
@@ -128,350 +49,336 @@ namespace ProyectoUME.Core
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Ciudad)
-                    .HasMaxLength(15)
-                    .HasDefaultValueSql("'NULL'");
+                    .IsRequired()
+                    .HasMaxLength(15);
 
                 entity.Property(e => e.Direccion)
-                    .HasMaxLength(30)
-                    .HasDefaultValueSql("'NULL'");
+                    .IsRequired()
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.NombreEmpresa)
+                    .IsRequired()
                     .HasColumnName("Nombre_Empresa")
-                    .HasMaxLength(20)
-                    .HasDefaultValueSql("'NULL'");
+                    .HasMaxLength(20);
 
-                entity.Property(e => e.Telefono).HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.Telefono)
+                    .IsRequired()
+                    .HasMaxLength(45);
             });
 
-            modelBuilder.Entity<Excusas>(entity =>
+            modelBuilder.Entity<Excusa>(entity =>
             {
-                entity.HasKey(e => e.NumeroReferencia)
+                entity.HasKey(e => e.IdExcusa)
                     .HasName("PRIMARY");
 
-                entity.ToTable("excusas");
+                entity.ToTable("excusa");
 
-                entity.HasIndex(e => e.IdAdministrador)
-                    .HasName("fk_excusas_administrador");
+                entity.HasIndex(e => e.RolIdRol)
+                    .HasName("fk_Excusa_Rol1_idx");
 
-                entity.HasIndex(e => e.IdObrero)
-                    .HasName("fk_excusas_obrero");
-
-                entity.Property(e => e.NumeroReferencia)
-                    .HasColumnName("Numero_Referencia")
+                entity.Property(e => e.IdExcusa)
+                    .HasColumnName("idExcusa")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.AnexoEvidencia)
+                    .IsRequired()
                     .HasColumnName("Anexo_Evidencia")
-                    .HasMaxLength(2)
-                    .HasDefaultValueSql("'NULL'");
+                    .HasMaxLength(2);
 
-                entity.Property(e => e.Apellido1Usuario)
-                    .HasColumnName("Apellido1_Usuario")
+                entity.Property(e => e.Apellido1)
                     .HasMaxLength(20)
                     .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.Apellido2Usuario)
-                    .HasColumnName("Apellido2_Usuario")
+                entity.Property(e => e.Apellodo2)
                     .HasMaxLength(20)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.CodigoProyecto)
-                    .HasColumnName("Codigo_Proyecto")
-                    .HasColumnType("int(11)")
                     .HasDefaultValueSql("'NULL'");
 
                 entity.Property(e => e.Correo)
-                    .HasMaxLength(20)
+                    .HasMaxLength(25)
                     .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.IdAdministrador)
-                    .HasColumnName("ID_Administrador")
-                    .HasColumnType("int(11)")
+                entity.Property(e => e.Nombre1)
+                    .HasMaxLength(10)
                     .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.IdObrero)
-                    .HasColumnName("ID_Obrero")
+                entity.Property(e => e.Nombre2)
+                    .HasMaxLength(10)
+                    .HasDefaultValueSql("'NULL'");
+
+                entity.Property(e => e.RolIdRol)
+                    .HasColumnName("Rol_idRol")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Nombre1Usuario)
-                    .HasColumnName("Nombre1_Usuario")
+                entity.Property(e => e.Telefono)
                     .HasMaxLength(10)
                     .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.Nombre2Usuario)
-                    .HasColumnName("Nombre2_Usuario")
+                entity.HasOne(d => d.RolIdRolNavigation)
+                    .WithMany(p => p.Excusa)
+                    .HasForeignKey(d => d.RolIdRol)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Excusa_Rol1");
+            });
+
+            modelBuilder.Entity<Jornada>(entity =>
+            {
+                entity.HasKey(e => e.IdJornada)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("jornada");
+
+                entity.Property(e => e.IdJornada)
+                    .HasColumnName("idJornada")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Jornada1)
+                    .HasColumnName("Jornada")
                     .HasMaxLength(10)
                     .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.Telefono).HasDefaultValueSql("'NULL'");
-
-                entity.HasOne(d => d.IdAdministradorNavigation)
-                    .WithMany(p => p.Excusas)
-                    .HasForeignKey(d => d.IdAdministrador)
-                    .HasConstraintName("fk_excusas_administrador");
-
-                entity.HasOne(d => d.IdObreroNavigation)
-                    .WithMany(p => p.Excusas)
-                    .HasForeignKey(d => d.IdObrero)
-                    .HasConstraintName("fk_excusas_obrero");
             });
 
             modelBuilder.Entity<ListaEmpleados>(entity =>
             {
-                entity.HasKey(e => e.NConsulta)
+                entity.HasKey(e => e.IdListaEmpleados)
                     .HasName("PRIMARY");
 
                 entity.ToTable("lista_empleados");
 
-                entity.HasIndex(e => e.CodigoProyecto)
-                    .HasName("fk_listaP_proyecto");
+                entity.HasIndex(e => e.ProyectoIdProyecto)
+                    .HasName("fk_Lista_empleados_Proyecto1_idx");
 
-                entity.Property(e => e.NConsulta)
-                    .HasColumnName("N_consulta")
-                    .HasColumnType("int(3)");
-
-                entity.Property(e => e.CodigoProyecto)
-                    .HasColumnName("Codigo_Proyecto")
+                entity.Property(e => e.IdListaEmpleados)
+                    .HasColumnName("idLista_empleados")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.CodigoProyectoNavigation)
+                entity.Property(e => e.ProyectoIdProyecto)
+                    .HasColumnName("Proyecto_idProyecto")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.ProyectoIdProyectoNavigation)
                     .WithMany(p => p.ListaEmpleados)
-                    .HasForeignKey(d => d.CodigoProyecto)
-                    .HasConstraintName("fk_listaP_proyecto");
+                    .HasForeignKey(d => d.ProyectoIdProyecto)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Lista_empleados_Proyecto1");
             });
 
-            modelBuilder.Entity<Obrero>(entity =>
+            modelBuilder.Entity<Permiso>(entity =>
             {
-                entity.HasKey(e => e.IdObrero)
+                entity.HasKey(e => e.IdPermiso)
                     .HasName("PRIMARY");
 
-                entity.ToTable("obrero");
+                entity.ToTable("permiso");
 
-                entity.HasIndex(e => e.NumeroCedula)
-                    .HasName("fk_usuario_obrero");
+                entity.HasIndex(e => e.RolIdRol)
+                    .HasName("fk_Permiso_Rol1_idx");
 
-                entity.Property(e => e.IdObrero)
-                    .HasColumnName("ID_Obrero")
+                entity.Property(e => e.IdPermiso)
+                    .HasColumnName("idPermiso")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Apellido1O)
+                entity.Property(e => e.Apellido1)
                     .IsRequired()
-                    .HasColumnName("Apellido1_O")
-                    .HasMaxLength(15);
+                    .HasMaxLength(20);
 
-                entity.Property(e => e.Nombre1O)
+                entity.Property(e => e.Apellido2)
                     .IsRequired()
-                    .HasColumnName("Nombre1_O")
-                    .HasMaxLength(10);
-
-                entity.Property(e => e.NumeroCedula)
-                    .HasColumnName("Numero_cedula")
-                    .HasColumnType("int(11)");
-
-                entity.HasOne(d => d.NumeroCedulaNavigation)
-                    .WithMany(p => p.Obrero)
-                    .HasForeignKey(d => d.NumeroCedula)
-                    .HasConstraintName("fk_usuario_obrero");
-            });
-
-            modelBuilder.Entity<Permisos>(entity =>
-            {
-                entity.HasKey(e => e.NumeroReferenciaPermiso)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("permisos");
-
-                entity.HasIndex(e => e.IdObrero)
-                    .HasName("fk_epermiso_obrero");
-
-                entity.HasIndex(e => e.IdSupervisor)
-                    .HasName("fk_permiso_supervisor");
-
-                entity.Property(e => e.NumeroReferenciaPermiso)
-                    .HasColumnName("Numero_Referencia_Permiso")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Apellido1Usuario)
-                    .HasColumnName("Apellido1_Usuario")
-                    .HasMaxLength(10)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.Apellido2Usuario)
-                    .HasColumnName("Apellido2_Usuario")
-                    .HasMaxLength(10)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.CodigoProyecto)
-                    .HasColumnName("Codigo_Proyecto")
-                    .HasColumnType("int(11)")
-                    .HasDefaultValueSql("'NULL'");
+                    .HasMaxLength(20);
 
                 entity.Property(e => e.Correo)
-                    .HasMaxLength(10)
-                    .HasDefaultValueSql("'NULL'");
+                    .IsRequired()
+                    .HasMaxLength(25);
 
-                entity.Property(e => e.IdObrero)
-                    .HasColumnName("ID_Obrero")
+                entity.Property(e => e.Nombre1)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.Nombre2)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.RolIdRol)
+                    .HasColumnName("Rol_idRol")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.IdSupervisor)
-                    .HasColumnName("ID_supervisor")
-                    .HasColumnType("int(11)")
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.Telefono)
+                    .IsRequired()
+                    .HasMaxLength(10);
 
-                entity.Property(e => e.Nombre1Usuario)
-                    .HasColumnName("Nombre1_Usuario")
-                    .HasMaxLength(10)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.Nombre2Usuario)
-                    .HasColumnName("Nombre2_Usuario")
-                    .HasMaxLength(10)
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.Telefono).HasDefaultValueSql("'NULL'");
-
-                entity.HasOne(d => d.IdObreroNavigation)
-                    .WithMany(p => p.Permisos)
-                    .HasForeignKey(d => d.IdObrero)
-                    .HasConstraintName("fk_epermiso_obrero");
-
-                entity.HasOne(d => d.IdSupervisorNavigation)
-                    .WithMany(p => p.Permisos)
-                    .HasForeignKey(d => d.IdSupervisor)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("fk_permiso_supervisor");
+                entity.HasOne(d => d.RolIdRolNavigation)
+                    .WithMany(p => p.Permiso)
+                    .HasForeignKey(d => d.RolIdRol)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Permiso_Rol1");
             });
 
             modelBuilder.Entity<Proyecto>(entity =>
             {
-                entity.HasKey(e => e.CodigoProyecto)
+                entity.HasKey(e => e.IdProyecto)
                     .HasName("PRIMARY");
 
                 entity.ToTable("proyecto");
 
-                entity.Property(e => e.CodigoProyecto)
-                    .HasColumnName("Codigo_Proyecto")
+                entity.HasIndex(e => e.RolIdRol)
+                    .HasName("fk_Proyecto_Rol1_idx");
+
+                entity.Property(e => e.IdProyecto)
+                    .HasColumnName("idProyecto")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.DireccionProyecto)
-                    .HasColumnName("Direccion_Proyecto")
-                    .HasMaxLength(30)
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.DireccionPoyecto)
+                    .IsRequired()
+                    .HasColumnName("Direccion_Poyecto")
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.NumeroEmpleados)
                     .HasColumnName("Numero_Empleados")
-                    .HasColumnType("int(11)")
-                    .HasDefaultValueSql("'NULL'");
+                    .HasColumnType("int(3)");
 
                 entity.Property(e => e.PersonaResponsable)
+                    .IsRequired()
                     .HasColumnName("Persona_Responsable")
-                    .HasMaxLength(40)
-                    .HasDefaultValueSql("'NULL'");
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.RolIdRol)
+                    .HasColumnName("Rol_idRol")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.RolIdRolNavigation)
+                    .WithMany(p => p.Proyecto)
+                    .HasForeignKey(d => d.RolIdRol)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Proyecto_Rol1");
             });
 
-            modelBuilder.Entity<Supervisor>(entity =>
+            modelBuilder.Entity<Rol>(entity =>
             {
-                entity.HasKey(e => e.IdSupervisor)
+                entity.HasKey(e => e.IdRol)
                     .HasName("PRIMARY");
 
-                entity.ToTable("supervisor");
+                entity.ToTable("rol");
 
-                entity.HasIndex(e => e.NumeroCedula)
-                    .HasName("fk_usuario_supervisor");
-
-                entity.Property(e => e.IdSupervisor)
-                    .HasColumnName("ID_supervisor")
+                entity.Property(e => e.IdRol)
+                    .HasColumnName("idRol")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Apellido1S)
-                    .HasColumnName("Apellido1_S")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Nombre1S)
-                    .HasColumnName("Nombre1_S")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.NumeroCedula)
-                    .HasColumnName("Numero_cedula")
-                    .HasColumnType("int(11)");
-
-                entity.HasOne(d => d.NumeroCedulaNavigation)
-                    .WithMany(p => p.Supervisor)
-                    .HasForeignKey(d => d.NumeroCedula)
-                    .HasConstraintName("fk_usuario_supervisor");
+                entity.Property(e => e.NombreRol)
+                    .IsRequired()
+                    .HasColumnName("Nombre_rol")
+                    .HasMaxLength(45);
             });
 
             modelBuilder.Entity<TurnoLaboral>(entity =>
             {
-                entity.HasKey(e => e.NumeroConsulta)
+                entity.HasKey(e => e.IdConsulta)
                     .HasName("PRIMARY");
 
                 entity.ToTable("turno_laboral");
 
-                entity.Property(e => e.NumeroConsulta)
-                    .HasColumnName("Numero_consulta")
+                entity.HasIndex(e => e.JornadaIdJornada)
+                    .HasName("fk_Turno_Laboral_Jornada1_idx");
+
+                entity.HasIndex(e => e.RolIdRol)
+                    .HasName("fk_Turno_Laboral_Rol1_idx");
+
+                entity.Property(e => e.IdConsulta)
+                    .HasColumnName("idConsulta")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.CodigoProyecto)
-                    .HasColumnName("Codigo_Proyecto")
-                    .HasColumnType("int(11)")
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.HoraIngreso).HasColumnName("Hora_Ingreso");
 
-                entity.Property(e => e.IdObrero)
-                    .HasColumnName("ID_Obrero")
+                entity.Property(e => e.HoraSalida).HasColumnName("Hora_Salida");
+
+                entity.Property(e => e.JornadaIdJornada)
+                    .HasColumnName("Jornada_idJornada")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Jornada)
-                    .HasMaxLength(7)
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.RolIdRol)
+                    .HasColumnName("Rol_idRol")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.JornadaIdJornadaNavigation)
+                    .WithMany(p => p.TurnoLaboral)
+                    .HasForeignKey(d => d.JornadaIdJornada)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Turno_Laboral_Jornada1");
+
+                entity.HasOne(d => d.RolIdRolNavigation)
+                    .WithMany(p => p.TurnoLaboral)
+                    .HasForeignKey(d => d.RolIdRol)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Turno_Laboral_Rol1");
             });
 
             modelBuilder.Entity<Usuario>(entity =>
             {
-                entity.HasKey(e => e.NumeroCedula)
+                entity.HasKey(e => e.IdUsuario)
                     .HasName("PRIMARY");
 
                 entity.ToTable("usuario");
 
-                entity.Property(e => e.NumeroCedula)
-                    .HasColumnName("Numero_Cedula")
+                entity.HasIndex(e => e.EmpresaNit)
+                    .HasName("fk_Usuario_Empresa_idx");
+
+                entity.HasIndex(e => e.RolIdRol)
+                    .HasName("fk_Usuario_Rol1_idx");
+
+                entity.Property(e => e.IdUsuario)
+                    .HasColumnName("idUsuario")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Correo)
+                entity.Property(e => e.Contraseña)
                     .HasMaxLength(20)
                     .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.Edad)
-                    .HasColumnType("int(11)")
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.Correo)
+                    .IsRequired()
+                    .HasMaxLength(20);
 
-                entity.Property(e => e.IdRol)
-                    .HasColumnName("Id_rol")
-                    .HasColumnType("int(3)")
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.Edad).HasColumnType("int(2)");
 
-                entity.Property(e => e.PrimerApellidoUsuario)
-                    .HasColumnName("Primer_Apellido_Usuario")
-                    .HasMaxLength(15)
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.EmpresaNit)
+                    .HasColumnName("Empresa_NIT")
+                    .HasColumnType("int(11)");
 
-                entity.Property(e => e.PrimerNombreUsuario)
-                    .HasColumnName("Primer_Nombre_Usuario")
-                    .HasMaxLength(10)
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.PrimerApellido)
+                    .IsRequired()
+                    .HasColumnName("Primer_Apellido")
+                    .HasMaxLength(25);
 
-                entity.Property(e => e.SegundoApellidoUsuario)
-                    .HasColumnName("Segundo_Apellido_Usuario")
-                    .HasMaxLength(15)
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.PrimerNombre)
+                    .IsRequired()
+                    .HasColumnName("Primer_Nombre")
+                    .HasMaxLength(10);
 
-                entity.Property(e => e.SegundoNombreUsuario)
-                    .HasColumnName("Segundo_Nombre_Usuario")
-                    .HasMaxLength(10)
-                    .HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.RolIdRol)
+                    .HasColumnName("Rol_idRol")
+                    .HasColumnType("int(11)");
 
-                entity.Property(e => e.Telefono).HasDefaultValueSql("'NULL'");
+                entity.Property(e => e.SegundoApellido)
+                    .IsRequired()
+                    .HasColumnName("Segundo_Apellido")
+                    .HasMaxLength(25);
+
+                entity.Property(e => e.SegundoNombre)
+                    .IsRequired()
+                    .HasColumnName("Segundo_Nombre")
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.Telefono)
+                    .IsRequired()
+                    .HasMaxLength(30);
+
+                entity.HasOne(d => d.EmpresaNitNavigation)
+                    .WithMany(p => p.Usuario)
+                    .HasForeignKey(d => d.EmpresaNit)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Usuario_Empresa");
+
+                entity.HasOne(d => d.RolIdRolNavigation)
+                    .WithMany(p => p.Usuario)
+                    .HasForeignKey(d => d.RolIdRol)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_Usuario_Rol1");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -22,7 +22,7 @@ namespace ProyectoUME.Web.Controllers
         // GET: ListaEmpleados
         public async Task<IActionResult> Index()
         {
-            var proyectoUMEDbContext = _context.ListaEmpleados.Include(l => l.CodigoProyectoNavigation);
+            var proyectoUMEDbContext = _context.ListaEmpleados.Include(l => l.ProyectoIdProyectoNavigation);
             return View(await proyectoUMEDbContext.ToListAsync());
         }
 
@@ -35,8 +35,8 @@ namespace ProyectoUME.Web.Controllers
             }
 
             var listaEmpleados = await _context.ListaEmpleados
-                .Include(l => l.CodigoProyectoNavigation)
-                .FirstOrDefaultAsync(m => m.NConsulta == id);
+                .Include(l => l.ProyectoIdProyectoNavigation)
+                .FirstOrDefaultAsync(m => m.IdListaEmpleados == id);
             if (listaEmpleados == null)
             {
                 return NotFound();
@@ -48,7 +48,7 @@ namespace ProyectoUME.Web.Controllers
         // GET: ListaEmpleados/Create
         public IActionResult Create()
         {
-            ViewData["CodigoProyecto"] = new SelectList(_context.Proyecto, "CodigoProyecto", "CodigoProyecto");
+            ViewData["ProyectoIdProyecto"] = new SelectList(_context.Proyecto, "IdProyecto", "DireccionPoyecto");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace ProyectoUME.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NConsulta,CodigoProyecto")] ListaEmpleados listaEmpleados)
+        public async Task<IActionResult> Create([Bind("IdListaEmpleados,ProyectoIdProyecto")] ListaEmpleados listaEmpleados)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace ProyectoUME.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CodigoProyecto"] = new SelectList(_context.Proyecto, "CodigoProyecto", "CodigoProyecto", listaEmpleados.CodigoProyecto);
+            ViewData["ProyectoIdProyecto"] = new SelectList(_context.Proyecto, "IdProyecto", "DireccionPoyecto", listaEmpleados.ProyectoIdProyecto);
             return View(listaEmpleados);
         }
 
@@ -82,7 +82,7 @@ namespace ProyectoUME.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["CodigoProyecto"] = new SelectList(_context.Proyecto, "CodigoProyecto", "CodigoProyecto", listaEmpleados.CodigoProyecto);
+            ViewData["ProyectoIdProyecto"] = new SelectList(_context.Proyecto, "IdProyecto", "DireccionPoyecto", listaEmpleados.ProyectoIdProyecto);
             return View(listaEmpleados);
         }
 
@@ -91,9 +91,9 @@ namespace ProyectoUME.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("NConsulta,CodigoProyecto")] ListaEmpleados listaEmpleados)
+        public async Task<IActionResult> Edit(int id, [Bind("IdListaEmpleados,ProyectoIdProyecto")] ListaEmpleados listaEmpleados)
         {
-            if (id != listaEmpleados.NConsulta)
+            if (id != listaEmpleados.IdListaEmpleados)
             {
                 return NotFound();
             }
@@ -107,7 +107,7 @@ namespace ProyectoUME.Web.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ListaEmpleadosExists(listaEmpleados.NConsulta))
+                    if (!ListaEmpleadosExists(listaEmpleados.IdListaEmpleados))
                     {
                         return NotFound();
                     }
@@ -118,7 +118,7 @@ namespace ProyectoUME.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CodigoProyecto"] = new SelectList(_context.Proyecto, "CodigoProyecto", "CodigoProyecto", listaEmpleados.CodigoProyecto);
+            ViewData["ProyectoIdProyecto"] = new SelectList(_context.Proyecto, "IdProyecto", "DireccionPoyecto", listaEmpleados.ProyectoIdProyecto);
             return View(listaEmpleados);
         }
 
@@ -131,8 +131,8 @@ namespace ProyectoUME.Web.Controllers
             }
 
             var listaEmpleados = await _context.ListaEmpleados
-                .Include(l => l.CodigoProyectoNavigation)
-                .FirstOrDefaultAsync(m => m.NConsulta == id);
+                .Include(l => l.ProyectoIdProyectoNavigation)
+                .FirstOrDefaultAsync(m => m.IdListaEmpleados == id);
             if (listaEmpleados == null)
             {
                 return NotFound();
@@ -154,7 +154,7 @@ namespace ProyectoUME.Web.Controllers
 
         private bool ListaEmpleadosExists(int id)
         {
-            return _context.ListaEmpleados.Any(e => e.NConsulta == id);
+            return _context.ListaEmpleados.Any(e => e.IdListaEmpleados == id);
         }
     }
 }

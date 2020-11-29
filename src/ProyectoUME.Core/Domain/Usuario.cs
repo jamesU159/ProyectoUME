@@ -5,25 +5,19 @@ namespace ProyectoUME.Core.Domain
 {
     public partial class Usuario
     {
-        public Usuario()
-        {
-            Administrador = new HashSet<Administrador>();
-            Obrero = new HashSet<Obrero>();
-            Supervisor = new HashSet<Supervisor>();
-        }
-
-        public int NumeroCedula { get; set; }
-        public string PrimerNombreUsuario { get; set; }
-        public string SegundoNombreUsuario { get; set; }
-        public string PrimerApellidoUsuario { get; set; }
-        public string SegundoApellidoUsuario { get; set; }
+        public int IdUsuario { get; set; }
+        public string PrimerNombre { get; set; }
+        public string SegundoNombre { get; set; }
+        public string PrimerApellido { get; set; }
+        public string SegundoApellido { get; set; }
         public string Correo { get; set; }
-        public int? IdRol { get; set; }
-        public int? Edad { get; set; }
-        public double? Telefono { get; set; }
+        public int Edad { get; set; }
+        public string Telefono { get; set; }
+        public string Contraseña { get; set; }
+        public int EmpresaNit { get; set; }
+        public int RolIdRol { get; set; }
 
-        public virtual ICollection<Administrador> Administrador { get; set; }
-        public virtual ICollection<Obrero> Obrero { get; set; }
-        public virtual ICollection<Supervisor> Supervisor { get; set; }
+        public virtual Empresa EmpresaNitNavigation { get; set; }
+        public virtual Rol RolIdRolNavigation { get; set; }
     }
 }

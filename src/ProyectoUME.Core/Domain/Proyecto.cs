@@ -10,11 +10,13 @@ namespace ProyectoUME.Core.Domain
             ListaEmpleados = new HashSet<ListaEmpleados>();
         }
 
-        public int CodigoProyecto { get; set; }
-        public int? NumeroEmpleados { get; set; }
-        public string DireccionProyecto { get; set; }
+        public int IdProyecto { get; set; }
+        public int NumeroEmpleados { get; set; }
+        public string DireccionPoyecto { get; set; }
         public string PersonaResponsable { get; set; }
+        public int RolIdRol { get; set; }
 
+        public virtual Rol RolIdRolNavigation { get; set; }
         public virtual ICollection<ListaEmpleados> ListaEmpleados { get; set; }
     }
 }
